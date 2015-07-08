@@ -1,7 +1,7 @@
 # Semantic Versioning (`semver`)
 
 [![ion install semver](https://img.shields.io/badge/ion%20install-semver-blue.svg)](https://github.com/IodineLang/Ion)
-![version v0.1.0](https://img.shields.io/badge/version-v0.1.0-blue.svg)
+![version v0.1.0](https://img.shields.io/badge/version-v0.2.0-blue.svg)
 ![deps](https://img.shields.io/badge/dependencies-none-green.svg)
 
 `semver` is a semantic versioning library for Iodine. It's extremely lightweight and you're encouraged to bundle it with your projects if that's convenient. 
