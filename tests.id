@@ -1,0 +1,156 @@
+use testing;
+use SemanticVersion from src.semver;
+
+func main (args) {
+    assert = testing.assert ();
+    
+    # Conversion to representation
+    assert.add (semverTestToReprMajor);
+    assert.add (semverTestToReprMinor);
+    assert.add (semverTestToReprPatch);
+    assert.add (semverTestToReprTag);
+    
+    # Conversion from representation
+    assert.add (semverTestFromRepr);
+    
+    # isAlpha test
+    assert.add (semverTestIsAlpha);
+    
+    # Partial tests
+    assert.add (semverTestPartialToRepr); 
+    assert.add (semverTestPartialToRepr2);
+    assert.add (semverTestPartialToRepr3);
+    assert.add (semverTestNoV);
+    
+    # Tilde comparison
+    assert.add (semverTestTildeComp);
+    assert.add (semverTestTildeComp2);
+    assert.add (semverTestTildeComp3);
+    
+    # Caret comparison
+    assert.add (semverTestCaretComp);
+    assert.add (semverTestCaretComp2);
+    
+    # Range comparison
+    assert.add (semverTestRangeComp);
+    assert.add (semverTestRangeComp2);
+    assert.add (semverTestRangeComp3);
+    
+    # < > <= >= Comparisons
+    assert.add (semverTestComps);
+    assert.add (semverTestComps2);
+    
+    assert.run ();
+}
+
+func semverTestToReprMajor (assert) {
+    sv = SemanticVersion ("v1.5.3");
+    assert.eq (1, sv.versionMajor, "Major version when converting to repr");
+}
+
+func semverTestToReprMinor (assert) {
+    sv = SemanticVersion ("v1.5.3");
+    assert.eq (5, sv.versionMinor, "Minor version when converting to repr");
+}
+
+func semverTestToReprPatch (assert) {
+    sv = SemanticVersion ("v1.5.3");
+    assert.eq (3, sv.versionPatch, "Patch version when converting to repr");
+}
+
+func semverTestToReprTag (assert) {
+    sv = SemanticVersion ("v1.5.3-rc");
+    assert.eq ("rc", sv.versionTag, "Tag when converting to repr");
+}
+
+func semverTestFromRepr (assert) {
+    sv = SemanticVersion (0, 3, 2, "alpha");
+    assert.eq (sv.versionString, "v0.3.2-alpha", "Conversion from repr to " +
+               "string");
+}
+
+func semverTestIsAlpha (assert) {
+    sv = SemanticVersion ("v0.2.3");
+    assert.eq (sv.isAlpha (), true, "v0.y.z isAlpha () == true");
+}
+
+func semverTestPartialToRepr (assert) {
+    sv = SemanticVersion ("v7.3");
+    assert.eq (sv.versionMajor, 7, "Major version when converting partial");
+}
+
+func semverTestPartialToRepr2 (assert) {
+    sv = SemanticVersion ("v7.3");
+    assert.eq (sv.versionMinor, 3, "Major version when converting partial");
+}
+
+func semverTestPartialToRepr3 (assert) {
+    sv = SemanticVersion ("v7.3");
+    assert.eq (sv.versionPatch, 0, "Major version when converting partial");
+}
+
+func semverTestNoV (assert) {
+    sv = SemanticVersion ("113.2");
+    assert.eq (sv.versionMajor, 113, "Major version when converting partial");
+}
+
+func semverTestTildeComp (assert) {
+    sv = SemanticVersion ("v3.11.2");
+    cmp = sv.isMatch ("~3.11.1");
+    assert.eq (Str (true), Str (cmp), "Tilde comparison");
+}
+
+func semverTestTildeComp2 (assert) {
+    sv = SemanticVersion ("v3.11.2");
+    cmp = sv.isMatch ("~3.11.3");
+    assert.eq (Str (false), Str (cmp), "Tilde comparison");
+}
+
+func semverTestTildeComp3 (assert) {
+    sv = SemanticVersion ("v3.11.2");
+    cmp = sv.isMatch ("~3.10.1");
+    assert.eq (Str (false), Str (cmp), "Tilde comparison");
+}
+
+func semverTestCaretComp (assert) {
+    sv = SemanticVersion ("v3.11.2");
+    cmp = sv.isMatch ("^3.10.1");
+    assert.eq (Str (true), Str (cmp), "Caret comparison");
+}
+
+func semverTestCaretComp2 (assert) {
+    sv = SemanticVersion ("v3.11.2");
+    cmp = sv.isMatch ("^3.11.3");
+    assert.eq (Str (false), Str (cmp), "Caret comparison");
+}
+
+func semverTestRangeComp (assert) {
+    sv = SemanticVersion ("v0.6.12");
+    cmp = sv.isMatch ("v0.3.2 - v0.6.13");
+    assert.eq (Str (true), Str (cmp), "Range comparison");
+}
+
+func semverTestRangeComp2 (assert) {
+    sv = SemanticVersion ("v1.6.12");
+    cmp = sv.isMatch ("v0.3.2 - v0.6.13");
+    assert.eq (Str (false), Str (cmp), "Range comparison");
+}
+
+func semverTestRangeComp3 (assert) {
+    sv = SemanticVersion ("v0.6.12");
+    cmp = sv.isMatch ("0.6.13 - v0.6.13");
+    assert.eq (Str (false), Str (cmp), "Range comparison");
+}
+
+func semverTestComps (assert) {
+    sv = SemanticVersion ("v0.6.12");
+    cmp = sv.isMatch (">0.6.11 <=0.7.0");
+    assert.eq (Str (true), Str (cmp), "Less than & greater than comparisons");
+}
+
+func semverTestComps2 (assert) {
+    sv = SemanticVersion ("v3.6.12");
+    cmp = sv.isMatch (">0.6.11 <=0.7.0");
+    assert.eq (Str (false), Str (cmp), "Less than & greater than comparisons");
+}
+

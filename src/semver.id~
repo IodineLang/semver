@@ -204,3 +204,14 @@ class SemanticVersion {
     }
 }
 
+func main () {
+    sv = SemanticVersion ("v0.4.11");
+    print (sv.isMatch ("~v0.4.2"));
+    print (sv.isMatch ("^v0.3.2"));
+    print (sv.isLessThan ("v0.4.11"));
+    print (sv.isGTE ("v0.4.11"));
+    print (sv.isGreaterThan ("v0.4.10"));
+    print (sv.isLessThan ("0.5"));
+    print (sv.isMatch ("v0.4.12 - v0.5.2"));
+    print (sv.isMatch (">0.3.12 <=v0.4.10"));
+}
