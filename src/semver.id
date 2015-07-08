@@ -1,0 +1,60 @@
+class SemanticVersion {
+    func SemanticVersion (self, params args) {
+        if (args.getSize () == 1) {
+            self.versionString = args [0];
+            self._parseVersionString ();
+        }
+        else if (args.getSize() >= 2) {
+            argList = list () + args;
+            while (argList.getSize () < 4) {
+                argList.add (null);
+            }
+            self._createVersionString (argList [0], argList [1], argList [2], 
+                                       argList [3]);
+        }
+        else {
+            raise ("Argument exception!");
+        }
+    }
+    
+    func isAlpha (self) {
+        return self.versionMajor == 0;
+    }
+    
+    func _parseVersionString (self) {
+        ver = self.versionString;
+        if (self.versionString.startsWith ("v")) {
+            ver = self.versionString.substr (1);
+        }
+        
+        verSplit = ver.split ("-");
+        versionBase = verSplit [0].split (".");
+        self.versionTag = verSplit [1];
+        
+        foreach (i in range (3)) {
+            if (versionBase.getSize () <= i) {
+                versionBase.add (0);
+            }
+            else {
+                versionBase [i] = Int (versionBase [i]);
+            }
+        }
+        
+        self.versionMajor = versionBase [0];
+        self.versionMinor = versionBase [1];
+        self.versionPatch = versionBase [2];
+    }
+    
+    func _createVersionString (self, major, minor, patch, tag) {
+        if (null == patch) {
+            patch = 0;
+        }
+        fmt = "v{}.{}.{}";
+        ver = fmt.format (major, minor, patch);
+        if (tag != null && tag != "") {
+            ver += "-{}".format (tag);
+        } 
+        self.versionString = ver;
+        self._parseVersionString ();
+    }
+}
