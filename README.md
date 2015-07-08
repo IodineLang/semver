@@ -23,9 +23,13 @@
     }
     
 > 0
+>
 > 7
+>
 > 3
+>
 > rc
+>
 > Alpha (before v1)
 
     use semver;
