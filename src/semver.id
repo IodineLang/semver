@@ -1,3 +1,6 @@
+## semver v0.2.0 (available at https://github.com/iodinelang/semver)
+## Licensed under the MIT License.
+
 class SemanticVersion {
     func SemanticVersion (self, params args) {
         if (args.getSize () == 1) {
@@ -5,7 +8,7 @@ class SemanticVersion {
             self._parseVersionString ();
         }
         else if (args.getSize() >= 2) {
-            argList = list () + args;
+            argList = List () + args;
             while (argList.getSize () < 4) {
                 argList.add (null);
             }
@@ -126,6 +129,16 @@ class SemanticVersion {
         return false;
     }
     
+    func isEqual (self, ver) {
+        v = SemanticVersion (ver);
+        if (v.versionMajor == self.versionMajor && 
+            v.versionMinor == self.versionMinor && 
+            v.versionPatch == self.versionPatch) {
+            return true;
+        }
+        return false;
+    }
+    
     func isMatch (self, requestedVersion) {
         if (requestedVersion == "*") {
             return true;
@@ -144,7 +157,7 @@ class SemanticVersion {
             return self._isRangeMatch (reqVer);
         }
         
-        conds = list ();
+        conds = List ();
         
         foreach (v in reqVer) {
             if (v.startsWith (">=")) {
@@ -158,6 +171,9 @@ class SemanticVersion {
             }
             else if (v.startsWith ("<")) {
                 conds.add (self.isLessThan (v.substr (1)));
+            }
+            else {
+                conds.add (self.isEqual (v));
             }
         }
         if (!conds.contains (false)) {
@@ -203,4 +219,3 @@ class SemanticVersion {
         return false;
     }
 }
-
