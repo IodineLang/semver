@@ -1,0 +1,67 @@
+use describe, expect from espresso
+use SemanticVersion from .semver
+
+
+describe ("Semantic Version Library", lambda (test) {
+    test.it ("Major version parsed correctly", lambda {
+        sv = SemanticVersion ("v1.5.3");
+
+        expect (sv.version_major).to.equal (1)
+    })
+
+    test.it ("Minor version parsed correctly", lambda {
+        sv = SemanticVersion ("v1.5.3");
+
+        expect (sv.version_minor).to.equal (5)
+    })
+
+    test.it ("Patch version parsed correctly", lambda {
+        sv = SemanticVersion ("v1.5.3");
+
+        expect (sv.version_patch).to.equal (3)
+    })
+
+    test.it ("Release tag parsed corretly", lambda {
+        sv = SemanticVersion ("v1.5.3-rc2")
+
+        expect (sv.version_tag).to.equal ("rc2")
+    })
+
+    test.it ("Tilde comparison", lambda {
+        sv = SemanticVersion ("v3.11.2");
+    
+        expect (sv.ismatch ("~3.11.1")).to.be._true ()
+        expect (sv.ismatch ("~3.10.1")).to.be._false ()
+    })
+
+    test.it ("Caret comparison", lambda {
+
+        sv = SemanticVersion ("v3.11.2");
+        expect (sv.ismatch ("^3.10.1")).to.be._true ()
+
+        sv = SemanticVersion ("v3.11.2");
+        expect (sv.ismatch ("^3.11.3")).to.be._false ()
+
+    })
+
+    test.it ("Range comparison", lambda {
+        sv = SemanticVersion ("v0.6.12");
+        expect (sv.ismatch ("v0.3.2 - v0.6.13")).to.be._true ()
+        expect (sv.ismatch ("v0.6.13 - v0.6.15")).to.be._false ()
+    })
+
+    test.it ("Comparison Operators", lambda {
+        sv = SemanticVersion ("v1.5.2")
+
+        expect (sv > "v1.0.0").to.be._true ()
+        expect (sv > "v1.5.3").to.be._false ()
+        expect (sv < "v1.6.3").to.be._true ()
+        expect (sv < "v0.3.1").to.be._false ()
+        expect (sv <= "1.5.2").to.be._true ()
+        expect (sv <= "v0.2.1").to.be._false ()
+        expect (sv >= "1.5.2").to.be._true ()
+        expect (sv >= "v0.2.1").to.be._true ()
+        expect (sv == "1.5.2").to.be._true ()
+        expect (sv == "1.5.0").to.be._false ()
+    }) 
+})
